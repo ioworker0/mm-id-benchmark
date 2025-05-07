@@ -1,0 +1,1041 @@
+
+Sorted summary for file /lib/modules/6.15.0-rc1/build/vmlinux
+----------------------------------------------
+
+   25.00 atomic.h:33
+    9.11 pgtable.h:1345
+    8.61 memory.c:984
+    7.12 memory.c:1062
+    4.97 memory.c:1016
+    4.14 memory.c:991
+    3.97 memory.c:1002
+    3.97 memory.c:1011
+    3.82 page-flags.h:280
+    3.64 memory.c:1008
+    3.15 memory.c:967
+    2.81 memory.c:1012
+    2.32 memory.c:957
+    1.99 pgtable.h:429
+    1.82 page-flags.h:282
+    1.82 memory.c:1030
+    1.82 memory.c:970
+    1.66 memory.c:963
+    1.49 memory.c:1003
+    1.49 memory.c:1034
+    1.32 mm.h:1697
+    0.99 pgtable.h:886
+    0.66 pgtable.h:408
+    0.66 pgtable.h:428
+ Percent |	Source code & Disassembly of vmlinux for cycles:P (604 samples, percent: local period)
+------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3                Disassembly of section .text:
+         :
+         : 5                ffffffff815e2770 <copy_present_ptes>:
+         : 6                */
+         : 7                static inline int
+         : 8                copy_present_ptes(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma,
+         : 9                pte_t *dst_pte, pte_t *src_pte, pte_t pte, unsigned long addr,
+         : 10               int max_nr, int *rss, struct folio **prealloc)
+         : 11               {
+    0.00 :   ffffffff815e2770:       push   %rbp
+    0.00 :   ffffffff815e2771:       mov    %rsp,%rbp
+    2.15 :   ffffffff815e2774:       push   %r15 // memory.c:984
+    0.00 :   ffffffff815e2776:       push   %r14
+    0.00 :   ffffffff815e2778:       mov    %rsi,%r14
+    0.00 :   ffffffff815e277b:       mov    %r9,%rsi
+    0.99 :   ffffffff815e277e:       push   %r13
+    0.00 :   ffffffff815e2780:       push   %r12
+    0.00 :   ffffffff815e2782:       mov    %r8,%r12
+    0.00 :   ffffffff815e2785:       push   %rbx
+    0.99 :   ffffffff815e2786:       sub    $0x48,%rsp
+    0.00 :   ffffffff815e278a:       mov    0x18(%rbp),%r11
+    0.00 :   ffffffff815e278e:       mov    %rdi,-0x40(%rbp)
+         : 25               struct folio *folio;
+         : 26               struct page *page;
+         : 27               bool any_writable;
+         : 28               fpb_t flags = 0;
+         :
+         : 30               page = vm_normal_page(src_vma, addr, pte);
+    2.65 :   ffffffff815e2792:       mov    %r14,%rdi // memory.c:991
+         : 32               {
+    0.00 :   ffffffff815e2795:       mov    %rdx,-0x48(%rbp)
+    0.00 :   ffffffff815e2799:       mov    %r8,%rdx
+    0.00 :   ffffffff815e279c:       mov    %rcx,-0x60(%rbp)
+    1.66 :   ffffffff815e27a0:       mov    %r8,-0x58(%rbp) // memory.c:984
+    0.00 :   ffffffff815e27a4:       mov    %r9,-0x68(%rbp)
+    0.00 :   ffffffff815e27a8:       mov    %r11,-0x50(%rbp)
+    0.00 :   ffffffff815e27ac:       mov    %gs:0x1e36854(%rip),%r15        # ffffffff83419008 <__stack_chk_guard>
+    2.81 :   ffffffff815e27b4:       mov    %r15,-0x30(%rbp)
+    0.00 :   ffffffff815e27b8:       mov    0x20(%rbp),%r15
+         : 42               page = vm_normal_page(src_vma, addr, pte);
+    1.49 :   ffffffff815e27bc:       call   ffffffff815e2680 <vm_normal_page> // memory.c:991
+         : 44               if (unlikely(!page))
+    0.00 :   ffffffff815e27c1:       test   %rax,%rax
+    0.00 :   ffffffff815e27c4:       je     ffffffff815e2822 <copy_present_ptes+0xb2>
+         : 47               return page_fixed_fake_head(page) != page;
+         : 48               }
+         :
+         : 50               static __always_inline unsigned long _compound_head(const struct page *page)
+         : 51               {
+         : 52               unsigned long head = READ_ONCE(page->compound_head);
+    3.82 :   ffffffff815e27c6:       mov    0x8(%rax),%rbx // page-flags.h:280
+         :
+         : 55               if (unlikely(head & 1))
+    0.00 :   ffffffff815e27ca:       mov    -0x50(%rbp),%r11
+    1.82 :   ffffffff815e27ce:       mov    %rax,%r13 // page-flags.h:282
+    0.00 :   ffffffff815e27d1:       test   $0x1,%bl
+    0.00 :   ffffffff815e27d4:       jne    ffffffff815e2bf9 <copy_present_ptes+0x489>
+         : 60               JUMP_TABLE_ENTRY(key, label)
+         : 61               #endif /* CONFIG_HAVE_JUMP_LABEL_HACK */
+         :
+         : 63               static __always_inline bool arch_static_branch(struct static_key * const key, const bool branch)
+         : 64               {
+         : 65               asm goto(ARCH_STATIC_BRANCH_ASM("%c0 + %c1", "%l[l_yes]")
+    0.00 :   ffffffff815e27da:       nopl   0x0(%rax,%rax,1)
+         : 67               return page;
+    0.00 :   ffffffff815e27df:       mov    %rax,%rbx
+         : 69               /*
+         : 70               * If we likely have to copy, just don't bother with batching. Make
+         : 71               * sure that the common "small folio" case is as fast as possible
+         : 72               * by keeping the batching logic separate.
+         : 73               */
+         : 74               if (unlikely(!*prealloc && folio_test_large(folio) && max_nr != 1)) {
+    1.99 :   ffffffff815e27e2:       cmpq   $0x0,(%r15) // memory.c:1002
+    0.99 :   ffffffff815e27e6:       je     ffffffff815e2b05 <copy_present_ptes+0x395>
+         : 77               return ret;
+         : 78               }
+         :
+         : 80               static inline void page_ref_inc(struct page *page)
+         : 81               {
+         : 82               atomic_inc(&page->_refcount);
+    0.00 :   ffffffff815e27ec:       lea    0x34(%rbx),%rdx
+         : 84               }
+         : 85               #define arch_atomic_sub_and_test arch_atomic_sub_and_test
+         :
+         : 87               static __always_inline void arch_atomic_inc(atomic_t *v)
+         : 88               {
+         : 89               asm_inline volatile(LOCK_PREFIX "incl %0"
+    0.00 :   ffffffff815e27f0:       lock incl 0x34(%rbx)
+         : 91               addr, nr);
+         : 92               return nr;
+         : 93               }
+         :
+         : 95               folio_get(folio);
+         : 96               if (folio_test_anon(folio)) {
+    0.00 :   ffffffff815e27f4:       testb  $0x1,0x18(%rbx)
+    0.00 :   ffffffff815e27f8:       jne    ffffffff815e2956 <copy_present_ptes+0x1e6>
+         : 99               }
+         :
+         : 101              static __always_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
+         : 102              {
+         : 103              return ((1UL << (nr & (BITS_PER_LONG-1))) &
+         : 104              (addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
+    0.00 :   ffffffff815e27fe:       mov    (%rbx),%rax
+         :
+         : 107              __folio_rmap_sanity_checks(folio, page, nr_pages, level);
+         :
+         : 109              switch (level) {
+         : 110              case RMAP_LEVEL_PTE:
+         : 111              if (!folio_test_large(folio)) {
+    0.00 :   ffffffff815e2801:       test   $0x40,%al
+    0.00 :   ffffffff815e2803:       jne    ffffffff815e28cb <copy_present_ptes+0x15b>
+    0.00 :   ffffffff815e2809:       lock incl 0x30(%rbx)
+    0.00 :   ffffffff815e280d:       mov    (%rbx),%rdx
+         : 116              }
+         : 117              rss[MM_ANONPAGES]++;
+         : 118              VM_WARN_ON_FOLIO(PageAnonExclusive(page), folio);
+         : 119              } else {
+         : 120              folio_dup_file_rmap_pte(folio, page, dst_vma);
+         : 121              rss[mm_counter_file(folio)]++;
+    0.00 :   ffffffff815e2810:       lea    0xc(%r11),%rax
+    0.00 :   ffffffff815e2814:       test   $0x20000,%edx
+    0.00 :   ffffffff815e281a:       cmovne %rax,%r11
+    0.00 :   ffffffff815e281e:       addl   $0x1,(%r11)
+         : 126              if (is_cow_mapping(src_vma->vm_flags) && pte_write(pte)) {
+    0.00 :   ffffffff815e2822:       mov    0x20(%r14),%rbx
+         : 128              void unpin_user_folio(struct folio *folio, unsigned long npages);
+         : 129              void unpin_folios(struct folio **folios, unsigned long nfolios);
+         :
+         : 131              static inline bool is_cow_mapping(vm_flags_t flags)
+         : 132              {
+         : 133              return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
+    0.00 :   ffffffff815e2826:       mov    %rbx,%rax
+    0.00 :   ffffffff815e2829:       and    $0x28,%eax
+    0.00 :   ffffffff815e282c:       cmp    $0x20,%rax
+    0.00 :   ffffffff815e2830:       je     ffffffff815e2a56 <copy_present_ptes+0x2e6>
+         : 138              if (src_vma->vm_flags & VM_SHARED)
+    0.00 :   ffffffff815e2836:       and    $0x8,%ebx
+    0.00 :   ffffffff815e2839:       jne    ffffffff815e2890 <copy_present_ptes+0x120>
+         :
+         : 142              static inline pte_t pte_clear_flags(pte_t pte, pteval_t clear)
+         : 143              {
+         : 144              pteval_t v = native_pte_val(pte);
+         :
+         : 146              return native_make_pte(v & ~clear);
+    0.00 :   ffffffff815e283b:       mov    -0x40(%rbp),%rcx
+    0.00 :   ffffffff815e283f:       mov    %r12,%rax
+    0.00 :   ffffffff815e2842:       and    $0xfffffffffffffbdf,%r12
+         : 150              PVOP_VCALL4(mmu.ptep_modify_prot_commit, vma, addr, ptep, pte.pte);
+         : 151              }
+         :
+         : 153              static inline void set_pte(pte_t *ptep, pte_t pte)
+         : 154              {
+         : 155              PVOP_VCALL2(mmu.set_pte, ptep, pte.pte);
+    0.00 :   ffffffff815e2849:       mov    -0x48(%rbp),%rdi
+    0.00 :   ffffffff815e284d:       and    $0xffffffffffffffdf,%rax
+    0.00 :   ffffffff815e2851:       testb  $0x10,0x21(%rcx)
+    0.00 :   ffffffff815e2855:       cmove  %r12,%rax
+    0.00 :   ffffffff815e2859:       mov    %rax,%rsi
+    0.00 :   ffffffff815e285c:       call   *0x1662156(%rip)        # ffffffff82c449b8 <pv_ops+0x1b8>
+         : 162              return err ? err : 1;
+    0.00 :   ffffffff815e2862:       mov    $0x1,%r15d
+         : 164              }
+         :
+         : 166              copy_pte:
+         : 167              __copy_present_ptes(dst_vma, src_vma, dst_pte, src_pte, pte, addr, 1);
+         : 168              return 1;
+         : 169              }
+    0.00 :   ffffffff815e2868:       mov    -0x30(%rbp),%rax
+    0.00 :   ffffffff815e286c:       sub    %gs:0x1e36794(%rip),%rax        # ffffffff83419008 <__stack_chk_guard>
+    0.00 :   ffffffff815e2874:       jne    ffffffff815e2ed2 <copy_present_ptes+0x762>
+    2.65 :   ffffffff815e287a:       add    $0x48,%rsp // memory.c:1062
+    0.00 :   ffffffff815e287e:       mov    %r15d,%eax
+    0.00 :   ffffffff815e2881:       pop    %rbx
+    1.49 :   ffffffff815e2882:       pop    %r12
+    0.00 :   ffffffff815e2884:       pop    %r13
+    0.00 :   ffffffff815e2886:       pop    %r14
+    0.00 :   ffffffff815e2888:       pop    %r15
+    1.49 :   ffffffff815e288a:       pop    %rbp
+    1.49 :   ffffffff815e288b:       jmp    ffffffff81fa92e0 <__x86_return_thunk>
+    0.00 :   ffffffff815e2890:       movabs $0xfbffffffffffffbf,%rax
+    0.00 :   ffffffff815e289a:       and    %rax,%r12
+    0.00 :   ffffffff815e289d:       jmp    ffffffff815e283b <copy_present_ptes+0xcb>
+    0.00 :   ffffffff815e289f:       mov    %rax,%rbx
+         : 186              if (IS_ALIGNED((unsigned long)page, PAGE_SIZE) &&
+    0.00 :   ffffffff815e28a2:       test   $0xfff,%eax
+    0.00 :   ffffffff815e28a7:       jne    ffffffff815e27e2 <copy_present_ptes+0x72>
+    0.00 :   ffffffff815e28ad:       mov    (%rax),%rax
+    0.00 :   ffffffff815e28b0:       test   $0x40,%al
+    0.00 :   ffffffff815e28b2:       je     ffffffff815e27e2 <copy_present_ptes+0x72>
+         : 192              unsigned long head = READ_ONCE(page[1].compound_head);
+    0.00 :   ffffffff815e28b8:       mov    0x48(%r13),%rax
+         : 194              return (const struct page *)(head - 1);
+    0.00 :   ffffffff815e28bc:       lea    -0x1(%rax),%rbx
+    0.00 :   ffffffff815e28c0:       test   $0x1,%al
+    0.00 :   ffffffff815e28c2:       cmove  %r13,%rbx
+    0.00 :   ffffffff815e28c6:       jmp    ffffffff815e27e2 <copy_present_ptes+0x72>
+    0.00 :   ffffffff815e28cb:       lock incl 0x30(%r13)
+         : 200              const mm_id_t mm_id = vma->vm_mm->mm_id;
+    0.00 :   ffffffff815e28d0:       mov    -0x40(%rbp),%rax
+         : 202              bit_spin_lock(FOLIO_MM_IDS_LOCK_BITNUM, &folio->_mm_ids);
+    0.00 :   ffffffff815e28d4:       lea    0x68(%rbx),%rsi
+         : 204              const mm_id_t mm_id = vma->vm_mm->mm_id;
+    0.00 :   ffffffff815e28d8:       mov    0x10(%rax),%rax
+    0.00 :   ffffffff815e28dc:       mov    0x528(%rax),%edx
+         : 207              * The various preempt_count add/sub methods
+         : 208              */
+         :
+         : 210              static __always_inline void __preempt_count_add(int val)
+         : 211              {
+         : 212              raw_cpu_add_4(__preempt_count, val);
+    0.00 :   ffffffff815e28e2:       incl   %gs:0x1e36747(%rip)        # ffffffff83419030 <__preempt_count>
+         : 214              return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(bts), *addr, c, "Ir", nr);
+    0.00 :   ffffffff815e28e9:       lock btsq $0x1f,0x68(%rbx)
+         : 216              * busywait with less bus contention for a good time to
+         : 217              * attempt to acquire the lock bit.
+         : 218              */
+         : 219              preempt_disable();
+         : 220              #if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
+         : 221              while (unlikely(test_and_set_bit_lock(bitnum, addr))) {
+    0.00 :   ffffffff815e28f0:       jb     ffffffff815e2dd8 <copy_present_ptes+0x668>
+         : 223              return __READ_ONCE((v)->counter);
+    0.00 :   ffffffff815e28f6:       mov    0x50(%rbx),%edi
+         : 225              new_mapcount_val = atomic_read(&folio->_large_mapcount) + diff;
+    0.00 :   ffffffff815e28f9:       lea    0x1(%rdi),%eax
+         : 227              __WRITE_ONCE(v->counter, i);
+    0.00 :   ffffffff815e28fc:       mov    %eax,0x50(%rbx)
+         : 229              return folio->_mm_id[idx] & MM_ID_MASK;
+    0.00 :   ffffffff815e28ff:       mov    0x68(%rbx),%eax
+    0.00 :   ffffffff815e2902:       mov    %eax,%ecx
+    0.00 :   ffffffff815e2904:       and    $0x7fffffff,%ecx
+         : 233              if (folio_mm_id(folio, 0) == mm_id) {
+    0.00 :   ffffffff815e290a:       cmp    %ecx,%edx
+    0.00 :   ffffffff815e290c:       je     ffffffff815e2aa5 <copy_present_ptes+0x335>
+         : 236              return folio->_mm_id[idx] & MM_ID_MASK;
+    0.00 :   ffffffff815e2912:       mov    0x6c(%rbx),%r8d
+    0.00 :   ffffffff815e2916:       mov    %r8d,%r9d
+    0.00 :   ffffffff815e2919:       and    $0x7fffffff,%r9d
+         : 240              } else if (folio_mm_id(folio, 1) == mm_id) {
+    0.00 :   ffffffff815e2920:       cmp    %r9d,%edx
+    0.00 :   ffffffff815e2923:       je     ffffffff815e2c02 <copy_present_ptes+0x492>
+         : 243              } else if (folio_mm_id(folio, 0) == MM_ID_DUMMY) {
+    0.00 :   ffffffff815e2929:       test   %ecx,%ecx
+    0.00 :   ffffffff815e292b:       jne    ffffffff815e2d47 <copy_present_ptes+0x5d7>
+         : 246              folio->_mm_id[idx] &= ~MM_ID_MASK;
+    0.00 :   ffffffff815e2931:       and    $0x80000000,%eax
+         : 248              folio->_mm_id_mapcount[0] = diff - 1;
+    0.00 :   ffffffff815e2936:       movl   $0x0,0x60(%rbx)
+         : 250              folio->_mm_id[idx] |= id;
+    0.00 :   ffffffff815e293d:       or     %edx,%eax
+    0.00 :   ffffffff815e293f:       mov    %eax,0x68(%rbx)
+         : 253              if (new_mapcount_val != diff - 1)
+    0.00 :   ffffffff815e2942:       cmp    $0xffffffff,%edi
+    0.00 :   ffffffff815e2945:       je     ffffffff815e2aa9 <copy_present_ptes+0x339>
+         : 256              folio->_mm_ids |= FOLIO_MM_IDS_SHARED_BIT;
+    0.00 :   ffffffff815e294b:       btsq   $0x3f,0x68(%rbx)
+    0.00 :   ffffffff815e2951:       jmp    ffffffff815e2aa9 <copy_present_ptes+0x339>
+         : 259              * don't allow to duplicate the mappings but instead require to e.g.,
+         : 260              * copy the subpage immediately for the child so that we'll always
+         : 261              * guarantee the pinned folio won't be randomly replaced in the
+         : 262              * future on write faults.
+         : 263              */
+         : 264              maybe_pinned = likely(!folio_is_device_private(folio)) &&
+    0.00 :   ffffffff815e2956:       mov    0x10(%r14),%rax
+         : 266              (addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
+    0.00 :   ffffffff815e295a:       mov    0x480(%rax),%rax
+         : 268              static inline bool folio_needs_cow_for_dma(struct vm_area_struct *vma,
+         : 269              struct folio *folio)
+         : 270              {
+         : 271              VM_BUG_ON(!(raw_read_seqcount(&vma->vm_mm->write_protect_seq) & 1));
+         :
+         : 273              if (!test_bit(MMF_HAS_PINNED, &vma->vm_mm->flags))
+    0.00 :   ffffffff815e2961:       test   $0x8000000,%eax
+    0.00 :   ffffffff815e2966:       je     ffffffff815e2981 <copy_present_ptes+0x211>
+    0.00 :   ffffffff815e2968:       mov    (%rbx),%rax
+         : 277              if (folio_has_pincount(folio))
+    0.00 :   ffffffff815e296b:       test   $0x40,%al
+    0.00 :   ffffffff815e296d:       jne    ffffffff815e2c2b <copy_present_ptes+0x4bb>
+         : 280              return __READ_ONCE((v)->counter);
+    0.00 :   ffffffff815e2973:       mov    0x34(%rbx),%eax
+    0.00 :   ffffffff815e2976:       cmp    $0x3ff,%eax
+    0.00 :   ffffffff815e297b:       ja     ffffffff815e2c36 <copy_present_ptes+0x4c6>
+    0.00 :   ffffffff815e2981:       mov    (%rbx),%rax
+    0.00 :   ffffffff815e2984:       mov    %r11,-0x50(%rbp)
+         : 286              VM_BUG_ON_PGFLAGS(!PageAnon(page), page);
+         : 287              /*
+         : 288              * HugeTLB stores this information on the head page; THP keeps it per
+         : 289              * page
+         : 290              */
+         : 291              if (PageHuge(page))
+    0.00 :   ffffffff815e2988:       mov    %r13,%rdi
+         : 293              for (i = 0; i < nr_pages; i++)
+         : 294              if (PageAnonExclusive(page + i))
+         : 295              return -EBUSY;
+         : 296              }
+         :
+         : 298              if (!folio_test_large(folio)) {
+    0.00 :   ffffffff815e298b:       test   $0x40,%al
+    0.00 :   ffffffff815e298d:       je     ffffffff815e2ac5 <copy_present_ptes+0x355>
+    0.00 :   ffffffff815e2993:       call   ffffffff815dd5b0 <PageHuge>
+    0.00 :   ffffffff815e2998:       mov    -0x50(%rbp),%r11
+    0.00 :   ffffffff815e299c:       mov    %eax,%edx
+    0.00 :   ffffffff815e299e:       mov    %r13,%rax
+    0.00 :   ffffffff815e29a1:       test   %dl,%dl
+    0.00 :   ffffffff815e29a3:       je     ffffffff815e29b9 <copy_present_ptes+0x249>
+         : 307              unsigned long head = READ_ONCE(page->compound_head);
+    0.00 :   ffffffff815e29a5:       mov    0x8(%r13),%rax
+         : 309              if (unlikely(head & 1))
+    0.00 :   ffffffff815e29a9:       test   $0x1,%al
+    0.00 :   ffffffff815e29ab:       jne    ffffffff815e2e5d <copy_present_ptes+0x6ed>
+    0.00 :   ffffffff815e29b1:       nopl   0x0(%rax,%rax,1)
+         : 313              return page;
+    0.00 :   ffffffff815e29b6:       mov    %r13,%rax
+    0.00 :   ffffffff815e29b9:       mov    (%rax),%rax
+         : 316              atomic_inc(&folio->_mapcount);
+         : 317              break;
+         : 318              }
+         :
+         : 320              do {
+         : 321              if (PageAnonExclusive(page))
+    0.00 :   ffffffff815e29bc:       test   $0x8,%ah
+    0.00 :   ffffffff815e29bf:       je     ffffffff815e29c7 <copy_present_ptes+0x257>
+         : 324              asm_inline volatile(LOCK_PREFIX "andb %b1,%0"
+    0.00 :   ffffffff815e29c1:       lock andb $0xf7,0x1(%r13)
+         : 326              asm_inline volatile(LOCK_PREFIX "incl %0"
+    0.00 :   ffffffff815e29c7:       lock incl 0x30(%r13)
+         : 328              const mm_id_t mm_id = vma->vm_mm->mm_id;
+    0.00 :   ffffffff815e29cc:       mov    -0x40(%rbp),%rax
+         : 330              bit_spin_lock(FOLIO_MM_IDS_LOCK_BITNUM, &folio->_mm_ids);
+    0.00 :   ffffffff815e29d0:       lea    0x68(%rbx),%rsi
+         : 332              const mm_id_t mm_id = vma->vm_mm->mm_id;
+    0.00 :   ffffffff815e29d4:       mov    0x10(%rax),%rax
+    0.00 :   ffffffff815e29d8:       mov    0x528(%rax),%edx
+    0.00 :   ffffffff815e29de:       incl   %gs:0x1e3664b(%rip)        # ffffffff83419030 <__preempt_count>
+         : 336              return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(bts), *addr, c, "Ir", nr);
+    0.00 :   ffffffff815e29e5:       lock btsq $0x1f,0x68(%rbx)
+    0.00 :   ffffffff815e29ec:       jb     ffffffff815e2e07 <copy_present_ptes+0x697>
+         : 339              return __READ_ONCE((v)->counter);
+    0.00 :   ffffffff815e29f2:       mov    0x50(%rbx),%edi
+         : 341              new_mapcount_val = atomic_read(&folio->_large_mapcount) + diff;
+    0.00 :   ffffffff815e29f5:       lea    0x1(%rdi),%eax
+         : 343              __WRITE_ONCE(v->counter, i);
+    0.00 :   ffffffff815e29f8:       mov    %eax,0x50(%rbx)
+         : 345              return folio->_mm_id[idx] & MM_ID_MASK;
+    0.00 :   ffffffff815e29fb:       mov    0x68(%rbx),%eax
+    0.00 :   ffffffff815e29fe:       mov    %eax,%ecx
+    0.00 :   ffffffff815e2a00:       and    $0x7fffffff,%ecx
+         : 349              if (folio_mm_id(folio, 0) == mm_id) {
+    0.00 :   ffffffff815e2a06:       cmp    %ecx,%edx
+    0.00 :   ffffffff815e2a08:       je     ffffffff815e2c0b <copy_present_ptes+0x49b>
+         : 352              return folio->_mm_id[idx] & MM_ID_MASK;
+    0.00 :   ffffffff815e2a0e:       mov    0x6c(%rbx),%r8d
+    0.00 :   ffffffff815e2a12:       mov    %r8d,%r9d
+    0.00 :   ffffffff815e2a15:       and    $0x7fffffff,%r9d
+         : 356              } else if (folio_mm_id(folio, 1) == mm_id) {
+    0.00 :   ffffffff815e2a1c:       cmp    %r9d,%edx
+    0.00 :   ffffffff815e2a1f:       je     ffffffff815e2e23 <copy_present_ptes+0x6b3>
+         : 359              } else if (folio_mm_id(folio, 0) == MM_ID_DUMMY) {
+    0.00 :   ffffffff815e2a25:       test   %ecx,%ecx
+    0.00 :   ffffffff815e2a27:       je     ffffffff815e2da6 <copy_present_ptes+0x636>
+         : 362              } else if (folio_mm_id(folio, 1) == MM_ID_DUMMY) {
+    0.00 :   ffffffff815e2a2d:       test   %r9d,%r9d
+    0.00 :   ffffffff815e2a30:       jne    ffffffff815e2c0f <copy_present_ptes+0x49f>
+         : 365              folio->_mm_id[idx] &= ~MM_ID_MASK;
+    0.00 :   ffffffff815e2a36:       and    $0x80000000,%r8d
+         : 367              folio->_mm_id_mapcount[1] = diff - 1;
+    0.00 :   ffffffff815e2a3d:       movl   $0x0,0x64(%rbx)
+         : 369              folio->_mm_id[idx] |= id;
+    0.00 :   ffffffff815e2a44:       or     %edx,%r8d
+    0.00 :   ffffffff815e2a47:       mov    %r8d,0x6c(%rbx)
+         : 372              folio->_mm_ids |= FOLIO_MM_IDS_SHARED_BIT;
+    0.00 :   ffffffff815e2a4b:       btsq   $0x3f,0x68(%rbx)
+    0.00 :   ffffffff815e2a51:       jmp    ffffffff815e2c0f <copy_present_ptes+0x49f>
+         : 375              if (is_cow_mapping(src_vma->vm_flags) && pte_write(pte)) {
+    0.00 :   ffffffff815e2a56:       mov    -0x58(%rbp),%rdi
+    0.00 :   ffffffff815e2a5a:       call   ffffffff815dd2f0 <pte_write>
+    0.00 :   ffffffff815e2a5f:       test   %eax,%eax
+    0.00 :   ffffffff815e2a61:       je     ffffffff815e2836 <copy_present_ptes+0xc6>
+         : 380              * (Write=0,Dirty=1).  Use cmpxchg() to prevent races with
+         : 381              * the hardware setting Dirty=1.
+         : 382              */
+         : 383              pte_t old_pte, new_pte;
+         :
+         : 385              old_pte = READ_ONCE(*ptep);
+    0.00 :   ffffffff815e2a67:       mov    -0x60(%rbp),%r12
+    0.00 :   ffffffff815e2a6b:       mov    (%r12),%rbx
+         : 388              return native_make_pte(v & ~clear);
+    0.00 :   ffffffff815e2a6f:       mov    %rbx,%rdi
+    0.00 :   ffffffff815e2a72:       and    $0xfffffffffffffffd,%rdi
+         : 391              v = mksaveddirty_shift(v);
+    0.00 :   ffffffff815e2a76:       call   ffffffff815dd370 <mksaveddirty_shift>
+    0.00 :   ffffffff815e2a7b:       mov    %rax,%rdx
+         : 394              do {
+         : 395              new_pte = pte_wrprotect(old_pte);
+         : 396              } while (!try_cmpxchg((long *)&ptep->pte, (long *)&old_pte, *(long *)&new_pte));
+    0.00 :   ffffffff815e2a7e:       mov    %rbx,%rax
+    0.00 :   ffffffff815e2a81:       lock cmpxchg %rdx,(%r12)
+    0.00 :   ffffffff815e2a87:       mov    %rax,%rbx
+    0.00 :   ffffffff815e2a8a:       jne    ffffffff815e2a6f <copy_present_ptes+0x2ff>
+         : 401              return native_make_pte(v & ~clear);
+    0.00 :   ffffffff815e2a8c:       mov    -0x58(%rbp),%rdi
+    0.00 :   ffffffff815e2a90:       and    $0xfffffffffffffffd,%rdi
+         : 404              v = mksaveddirty_shift(v);
+    0.00 :   ffffffff815e2a94:       call   ffffffff815dd370 <mksaveddirty_shift>
+         : 406              if (src_vma->vm_flags & VM_SHARED)
+    0.00 :   ffffffff815e2a99:       mov    0x20(%r14),%rbx
+    0.00 :   ffffffff815e2a9d:       mov    %rax,%r12
+         : 409              return native_make_pte(v);
+    0.00 :   ffffffff815e2aa0:       jmp    ffffffff815e2836 <copy_present_ptes+0xc6>
+         : 411              folio->_mm_id_mapcount[0] += diff;
+    0.00 :   ffffffff815e2aa5:       addl   $0x1,0x60(%rbx)
+         : 413              asm volatile(__ASM_SIZE(btr) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
+    0.00 :   ffffffff815e2aa9:       btrq   $0x1f,(%rsi)
+         : 415              * a decrement which hits zero means we have no preempt_count and should
+         : 416              * reschedule.
+         : 417              */
+         : 418              static __always_inline bool __preempt_count_dec_and_test(void)
+         : 419              {
+         : 420              return GEN_UNARY_RMWcc("decl", __my_cpu_var(__preempt_count), e,
+    0.00 :   ffffffff815e2aae:       decl   %gs:0x1e3657b(%rip)        # ffffffff83419030 <__preempt_count>
+         : 422              BUG_ON(!test_bit(bitnum, addr));
+         : 423              #endif
+         : 424              #if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
+         : 425              __clear_bit_unlock(bitnum, addr);
+         : 426              #endif
+         : 427              preempt_enable();
+    0.00 :   ffffffff815e2ab5:       jne    ffffffff815e280d <copy_present_ptes+0x9d>
+    0.00 :   ffffffff815e2abb:       call   ffffffff81fa9988 <__SCT__preempt_schedule>
+    0.00 :   ffffffff815e2ac0:       jmp    ffffffff815e280d <copy_present_ptes+0x9d>
+         : 431              if (PageHuge(page))
+    0.00 :   ffffffff815e2ac5:       call   ffffffff815dd5b0 <PageHuge>
+    0.00 :   ffffffff815e2aca:       mov    -0x50(%rbp),%r11
+    0.00 :   ffffffff815e2ace:       mov    %eax,%edx
+    0.00 :   ffffffff815e2ad0:       mov    %r13,%rax
+    0.00 :   ffffffff815e2ad3:       test   %dl,%dl
+    0.00 :   ffffffff815e2ad5:       je     ffffffff815e2aeb <copy_present_ptes+0x37b>
+         : 438              unsigned long head = READ_ONCE(page->compound_head);
+    0.00 :   ffffffff815e2ad7:       mov    0x8(%r13),%rax
+         : 440              if (unlikely(head & 1))
+    0.00 :   ffffffff815e2adb:       test   $0x1,%al
+    0.00 :   ffffffff815e2add:       jne    ffffffff815e2e97 <copy_present_ptes+0x727>
+    0.00 :   ffffffff815e2ae3:       nopl   0x0(%rax,%rax,1)
+         : 444              return page;
+    0.00 :   ffffffff815e2ae8:       mov    %r13,%rax
+         : 446              (addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
+    0.00 :   ffffffff815e2aeb:       mov    (%rax),%rax
+         : 448              if (PageAnonExclusive(page))
+    0.00 :   ffffffff815e2aee:       test   $0x8,%ah
+    0.00 :   ffffffff815e2af1:       jne    ffffffff815e2d6a <copy_present_ptes+0x5fa>
+         : 451              asm_inline volatile(LOCK_PREFIX "incl %0"
+    0.00 :   ffffffff815e2af7:       lock incl 0x30(%rbx)
+         : 453              rss[MM_ANONPAGES]++;
+    0.00 :   ffffffff815e2afb:       addl   $0x1,0x4(%r11)
+         : 455              VM_WARN_ON_FOLIO(PageAnonExclusive(page), folio);
+    0.00 :   ffffffff815e2b00:       jmp    ffffffff815e2822 <copy_present_ptes+0xb2>
+    0.00 :   ffffffff815e2b05:       mov    (%rbx),%rax
+         : 458              if (unlikely(!*prealloc && folio_test_large(folio) && max_nr != 1)) {
+    0.00 :   ffffffff815e2b08:       test   $0x40,%al
+    0.00 :   ffffffff815e2b0a:       je     ffffffff815e27ec <copy_present_ptes+0x7c>
+    0.00 :   ffffffff815e2b10:       cmpl   $0x1,0x10(%rbp)
+    0.99 :   ffffffff815e2b14:       je     ffffffff815e27ec <copy_present_ptes+0x7c> // memory.c:1002
+         : 463              if (src_vma->vm_flags & VM_SHARED)
+    0.00 :   ffffffff815e2b1a:       movzbl 0x20(%r14),%r8d
+         : 465              nr = folio_pte_batch(folio, addr, src_pte, pte, max_nr, flags,
+    0.00 :   ffffffff815e2b1f:       mov    0x10(%rbp),%ecx
+    0.00 :   ffffffff815e2b22:       lea    -0x31(%rbp),%r9
+    2.32 :   ffffffff815e2b26:       mov    %rbx,%rdi // memory.c:1008
+    0.00 :   ffffffff815e2b29:       mov    -0x58(%rbp),%rdx
+    0.00 :   ffffffff815e2b2d:       mov    -0x60(%rbp),%rsi
+    0.00 :   ffffffff815e2b31:       mov    %r11,-0x68(%rbp)
+         : 472              if (src_vma->vm_flags & VM_SHARED)
+    1.49 :   ffffffff815e2b35:       shr    $0x3,%r8b // memory.c:1003
+    0.00 :   ffffffff815e2b39:       and    $0x1,%r8d
+         : 475              nr = folio_pte_batch(folio, addr, src_pte, pte, max_nr, flags,
+    0.00 :   ffffffff815e2b3d:       or     $0x2,%r8d
+    1.32 :   ffffffff815e2b41:       call   ffffffff815e0eb0 <folio_pte_batch.constprop.0> // memory.c:1008
+    0.00 :   ffffffff815e2b46:       mov    %eax,%r15d
+         : 479              atomic_add(nr, &page->_refcount);
+    0.00 :   ffffffff815e2b49:       lea    0x34(%rbx),%rax
+    0.00 :   ffffffff815e2b4d:       mov    %rax,-0x50(%rbp)
+         : 482              asm_inline volatile(LOCK_PREFIX "addl %1, %0"
+   25.00 :   ffffffff815e2b51:       lock add %r15d,0x34(%rbx) // atomic.h:33
+         : 484              if (folio_test_anon(folio)) {
+    0.00 :   ffffffff815e2b56:       testb  $0x1,0x18(%rbx)
+    1.49 :   ffffffff815e2b5a:       mov    -0x68(%rbp),%r11 // memory.c:1011
+    2.48 :   ffffffff815e2b5e:       je     ffffffff815e2ed7 <copy_present_ptes+0x767>
+         : 488              if (folio_maybe_mapped_shared(folio)) {
+    0.00 :   ffffffff815e2b64:       mov    %rbx,%rdi
+    1.49 :   ffffffff815e2b67:       call   ffffffff815ddb00 <folio_maybe_mapped_shared> // memory.c:1012
+    0.00 :   ffffffff815e2b6c:       mov    0x10(%r14),%r8
+    0.00 :   ffffffff815e2b70:       mov    -0x68(%rbp),%r11
+    0.00 :   ffffffff815e2b74:       test   %al,%al
+    1.32 :   ffffffff815e2b76:       je     ffffffff815e2f0f <copy_present_ptes+0x79f>
+         : 495              dup_err = folio_try_dup_anon_rmap_ptes(
+    0.00 :   ffffffff815e2b7c:       mov    -0x40(%rbp),%rcx
+    0.00 :   ffffffff815e2b80:       mov    %r15d,%edx
+    0.00 :   ffffffff815e2b83:       mov    %r13,%rsi
+    0.00 :   ffffffff815e2b86:       mov    %rbx,%rdi
+    0.00 :   ffffffff815e2b89:       call   ffffffff815e0b60 <folio_try_dup_anon_rmap_ptes.isra.0>
+    0.00 :   ffffffff815e2b8e:       mov    -0x68(%rbp),%r11
+         : 502              if (unlikely(dup_err)) {
+    0.00 :   ffffffff815e2b92:       test   %eax,%eax
+    0.00 :   ffffffff815e2b94:       jne    ffffffff815e2ffd <copy_present_ptes+0x88d>
+         : 505              rss[MM_ANONPAGES] += nr;
+    0.00 :   ffffffff815e2b9a:       add    %r15d,0x4(%r11)
+         : 507              if (any_writable)
+    1.16 :   ffffffff815e2b9e:       cmpb   $0x0,-0x31(%rbp) // memory.c:1030
+    0.66 :   ffffffff815e2ba2:       jne    ffffffff815e2efb <copy_present_ptes+0x78b>
+         : 510              return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
+    0.00 :   ffffffff815e2ba8:       mov    0x20(%r14),%rax
+    0.00 :   ffffffff815e2bac:       mov    %rax,%rdx
+    1.32 :   ffffffff815e2baf:       and    $0x28,%edx // mm.h:1697
+         : 514              if (is_cow_mapping(src_vma->vm_flags) && pte_write(pte)) {
+    0.00 :   ffffffff815e2bb2:       cmp    $0x20,%rdx
+    1.49 :   ffffffff815e2bb6:       je     ffffffff815e2f2e <copy_present_ptes+0x7be> // memory.c:957
+         : 517              if (src_vma->vm_flags & VM_SHARED)
+    0.00 :   ffffffff815e2bbc:       test   $0x8,%al
+    1.66 :   ffffffff815e2bbe:       je     ffffffff815e2bcd <copy_present_ptes+0x45d> // memory.c:963
+         : 520              return native_make_pte(v & ~clear);
+    0.00 :   ffffffff815e2bc0:       movabs $0xfbffffffffffffbf,%rax
+    0.00 :   ffffffff815e2bca:       and    %rax,%r12
+         : 523              if (!userfaultfd_wp(dst_vma))
+    0.00 :   ffffffff815e2bcd:       mov    -0x40(%rbp),%rax
+    0.00 :   ffffffff815e2bd1:       mov    %r12,%rsi
+    0.00 :   ffffffff815e2bd4:       and    $0xfffffffffffffbdf,%rsi
+    0.83 :   ffffffff815e2bdb:       testb  $0x10,0x21(%rax) // memory.c:967
+    2.32 :   ffffffff815e2bdf:       je     ffffffff815e2be8 <copy_present_ptes+0x478>
+    0.00 :   ffffffff815e2be1:       mov    %r12,%rsi
+    0.00 :   ffffffff815e2be4:       and    $0xffffffffffffffdf,%rsi
+         : 531              set_ptes(dst_vma->vm_mm, addr, dst_pte, pte, nr);
+    0.00 :   ffffffff815e2be8:       mov    -0x48(%rbp),%rdi
+    0.00 :   ffffffff815e2bec:       mov    %r15d,%edx
+    1.82 :   ffffffff815e2bef:       call   ffffffff815e0510 <set_ptes.isra.0> // memory.c:970
+         : 535              return nr;
+    1.49 :   ffffffff815e2bf4:       jmp    ffffffff815e2868 <copy_present_ptes+0xf8> // memory.c:1034
+         : 537              return head - 1;
+    0.00 :   ffffffff815e2bf9:       sub    $0x1,%rbx
+    0.00 :   ffffffff815e2bfd:       jmp    ffffffff815e27e2 <copy_present_ptes+0x72>
+         : 540              folio->_mm_id_mapcount[1] += diff;
+    0.00 :   ffffffff815e2c02:       addl   $0x1,0x64(%rbx)
+         : 542              if (!IS_ENABLED(CONFIG_64BIT) && unlikely(folio->_mm_id_mapcount[1] < 0)) {
+    0.00 :   ffffffff815e2c06:       jmp    ffffffff815e2aa9 <copy_present_ptes+0x339>
+         : 544              folio->_mm_id_mapcount[0] += diff;
+    0.00 :   ffffffff815e2c0b:       addl   $0x1,0x60(%rbx)
+         : 546              asm volatile(__ASM_SIZE(btr) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
+    0.00 :   ffffffff815e2c0f:       btrq   $0x1f,(%rsi)
+    0.00 :   ffffffff815e2c14:       decl   %gs:0x1e36415(%rip)        # ffffffff83419030 <__preempt_count>
+    0.00 :   ffffffff815e2c1b:       jne    ffffffff815e2afb <copy_present_ptes+0x38b>
+    0.00 :   ffffffff815e2c21:       call   ffffffff81fa9988 <__SCT__preempt_schedule>
+    0.00 :   ffffffff815e2c26:       jmp    ffffffff815e2afb <copy_present_ptes+0x38b>
+         : 552              return __READ_ONCE((v)->counter);
+    0.00 :   ffffffff815e2c2b:       mov    0x5c(%rbx),%eax
+         : 554              maybe_pinned = likely(!folio_is_device_private(folio)) &&
+    0.00 :   ffffffff815e2c2e:       test   %eax,%eax
+    0.00 :   ffffffff815e2c30:       jle    ffffffff815e2981 <copy_present_ptes+0x211>
+         : 557              if (PageHuge(page))
+    0.00 :   ffffffff815e2c36:       mov    %r13,%rdi
+    0.00 :   ffffffff815e2c39:       mov    %r11,-0x70(%rbp)
+    0.00 :   ffffffff815e2c3d:       mov    %rdx,-0x50(%rbp)
+    0.00 :   ffffffff815e2c41:       call   ffffffff815dd5b0 <PageHuge>
+    0.00 :   ffffffff815e2c46:       mov    -0x50(%rbp),%rdx
+    0.00 :   ffffffff815e2c4a:       mov    -0x70(%rbp),%r11
+    0.00 :   ffffffff815e2c4e:       test   %al,%al
+    0.00 :   ffffffff815e2c50:       je     ffffffff815e2c63 <copy_present_ptes+0x4f3>
+         : 566              unsigned long head = READ_ONCE(page->compound_head);
+    0.00 :   ffffffff815e2c52:       mov    0x8(%r13),%rax
+         : 568              if (unlikely(head & 1))
+    0.00 :   ffffffff815e2c56:       test   $0x1,%al
+    0.00 :   ffffffff815e2c58:       jne    ffffffff815e2eb4 <copy_present_ptes+0x744>
+    0.00 :   ffffffff815e2c5e:       nopl   0x0(%rax,%rax,1)
+         : 572              return page;
+    0.00 :   ffffffff815e2c63:       mov    %r13,%rax
+         : 574              (addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
+    0.00 :   ffffffff815e2c66:       mov    (%rax),%rax
+         : 576              if (PageAnonExclusive(page + i))
+    0.00 :   ffffffff815e2c69:       test   $0x8,%ah
+    0.00 :   ffffffff815e2c6c:       je     ffffffff815e2981 <copy_present_ptes+0x211>
+         : 579              }
+         : 580              #define arch_atomic_dec arch_atomic_dec
+         :
+         : 582              static __always_inline bool arch_atomic_dec_and_test(atomic_t *v)
+         : 583              {
+         : 584              return GEN_UNARY_RMWcc(LOCK_PREFIX "decl", v->counter, e);
+    0.00 :   ffffffff815e2c72:       lock decl (%rdx)
+         : 586              if (folio_put_testzero(folio))
+    0.00 :   ffffffff815e2c75:       je     ffffffff815e2ebd <copy_present_ptes+0x74d>
+         : 588              new_folio = *prealloc;
+    0.00 :   ffffffff815e2c7b:       mov    (%r15),%rbx
+    0.00 :   ffffffff815e2c7e:       mov    %r11,-0x50(%rbp)
+         : 591              if (!new_folio)
+    0.00 :   ffffffff815e2c82:       test   %rbx,%rbx
+    0.00 :   ffffffff815e2c85:       je     ffffffff815e3005 <copy_present_ptes+0x895>
+         : 594              if (copy_mc_user_highpage(&new_folio->page, page, addr, src_vma))
+    0.00 :   ffffffff815e2c8b:       mov    %r13,%rsi
+    0.00 :   ffffffff815e2c8e:       mov    %rbx,%rdi
+    0.00 :   ffffffff815e2c91:       call   ffffffff815dd8e0 <copy_mc_user_highpage.isra.0>
+    0.00 :   ffffffff815e2c96:       test   %eax,%eax
+    0.00 :   ffffffff815e2c98:       jne    ffffffff815e3089 <copy_present_ptes+0x919>
+         : 600              *prealloc = NULL;
+    0.00 :   ffffffff815e2c9e:       movq   $0x0,(%r15)
+         : 602              asm volatile(__ASM_SIZE(bts) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
+    0.00 :   ffffffff815e2ca5:       btsq   $0x3,(%rbx)
+         : 604              folio_add_new_anon_rmap(new_folio, dst_vma, addr, RMAP_EXCLUSIVE);
+    0.00 :   ffffffff815e2caa:       mov    -0x40(%rbp),%r14
+    0.00 :   ffffffff815e2cae:       mov    -0x68(%rbp),%rdx
+    0.00 :   ffffffff815e2cb2:       mov    $0x1,%ecx
+    0.00 :   ffffffff815e2cb7:       mov    %rbx,%rdi
+    0.00 :   ffffffff815e2cba:       mov    %r14,%rsi
+    0.00 :   ffffffff815e2cbd:       call   ffffffff815fe730 <folio_add_new_anon_rmap>
+         : 611              folio_add_lru_vma(new_folio, dst_vma);
+    0.00 :   ffffffff815e2cc2:       mov    %r14,%rsi
+    0.00 :   ffffffff815e2cc5:       mov    %rbx,%rdi
+    0.00 :   ffffffff815e2cc8:       call   ffffffff815a31f0 <folio_add_lru_vma>
+         : 615              rss[MM_ANONPAGES]++;
+    0.00 :   ffffffff815e2ccd:       mov    -0x50(%rbp),%r11
+         : 617              return page_to_pfn(&folio->page);
+    0.00 :   ffffffff815e2cd1:       mov    %rbx,%rdi
+    0.00 :   ffffffff815e2cd4:       addl   $0x1,0x4(%r11)
+         : 620              pte = folio_mk_pte(new_folio, dst_vma->vm_page_prot);
+    0.00 :   ffffffff815e2cd9:       mov    0x18(%r14),%rsi
+    0.00 :   ffffffff815e2cdd:       sub    0x10208f4(%rip),%rdi        # ffffffff826035d8 <vmemmap_base>
+    0.00 :   ffffffff815e2ce4:       sar    $0x6,%rdi
+         : 624              return pfn_pte(folio_pfn(folio), pgprot);
+    0.00 :   ffffffff815e2ce8:       call   ffffffff815dd4d0 <pfn_pte>
+         : 626              return native_make_pte(v | set);
+    0.00 :   ffffffff815e2ced:       or     $0x40,%rax
+    0.00 :   ffffffff815e2cf1:       mov    %rax,%rdi
+         : 629              v = mksaveddirty_shift(v);
+    0.00 :   ffffffff815e2cf4:       call   ffffffff815dd370 <mksaveddirty_shift>
+         : 631              if (likely(vma->vm_flags & VM_WRITE))
+    0.00 :   ffffffff815e2cf9:       mov    0x20(%r14),%rdx
+    0.00 :   ffffffff815e2cfd:       test   $0x2,%dl
+    0.00 :   ffffffff815e2d00:       je     ffffffff815e2d11 <copy_present_ptes+0x5a1>
+         : 635              pte = pte_mkwrite(pte, vma);
+    0.00 :   ffffffff815e2d02:       mov    %r14,%rsi
+    0.00 :   ffffffff815e2d05:       mov    %rax,%rdi
+    0.00 :   ffffffff815e2d08:       call   ffffffff81308bb0 <pte_mkwrite>
+    0.00 :   ffffffff815e2d0d:       mov    0x20(%r14),%rdx
+         : 640              #endif
+         :
+         : 642              #ifndef ptep_get
+         : 643              static inline pte_t ptep_get(pte_t *ptep)
+         : 644              {
+         : 645              return READ_ONCE(*ptep);
+    0.00 :   ffffffff815e2d11:       mov    -0x60(%rbp),%rcx
+    0.00 :   ffffffff815e2d15:       mov    (%rcx),%rcx
+         : 648              }
+         :
+         : 650              static inline bool userfaultfd_pte_wp(struct vm_area_struct *vma,
+         : 651              pte_t pte)
+         : 652              {
+         : 653              return userfaultfd_wp(vma) && pte_uffd_wp(pte);
+    0.00 :   ffffffff815e2d18:       and    $0x10,%dh
+    0.00 :   ffffffff815e2d1b:       je     ffffffff815e2d31 <copy_present_ptes+0x5c1>
+    0.00 :   ffffffff815e2d1d:       and    $0x4,%ch
+    0.00 :   ffffffff815e2d20:       je     ffffffff815e2d31 <copy_present_ptes+0x5c1>
+         : 658              return native_make_pte(v & ~clear);
+    0.00 :   ffffffff815e2d22:       and    $0xfffffffffffffffd,%rax
+    0.00 :   ffffffff815e2d26:       or     $0x4,%ah
+    0.00 :   ffffffff815e2d29:       mov    %rax,%rdi
+         : 662              v = mksaveddirty_shift(v);
+    0.00 :   ffffffff815e2d2c:       call   ffffffff815dd370 <mksaveddirty_shift>
+         : 664              set_pte_at(dst_vma->vm_mm, addr, dst_pte, pte);
+    0.00 :   ffffffff815e2d31:       mov    -0x48(%rbp),%rdi
+    0.00 :   ffffffff815e2d35:       mov    $0x1,%edx
+    0.00 :   ffffffff815e2d3a:       mov    %rax,%rsi
+    0.00 :   ffffffff815e2d3d:       call   ffffffff815e0510 <set_ptes.isra.0>
+         : 669              return err ? err : 1;
+    0.00 :   ffffffff815e2d42:       jmp    ffffffff815e2862 <copy_present_ptes+0xf2>
+         : 671              } else if (folio_mm_id(folio, 1) == MM_ID_DUMMY) {
+    0.00 :   ffffffff815e2d47:       test   %r9d,%r9d
+    0.00 :   ffffffff815e2d4a:       jne    ffffffff815e2aa9 <copy_present_ptes+0x339>
+         : 674              folio->_mm_id[idx] &= ~MM_ID_MASK;
+    0.00 :   ffffffff815e2d50:       and    $0x80000000,%r8d
+         : 676              folio->_mm_id_mapcount[1] = diff - 1;
+    0.00 :   ffffffff815e2d57:       movl   $0x0,0x64(%rbx)
+         : 678              folio->_mm_id[idx] |= id;
+    0.00 :   ffffffff815e2d5e:       or     %edx,%r8d
+    0.00 :   ffffffff815e2d61:       mov    %r8d,0x6c(%rbx)
+         : 681              folio->_mm_id_mapcount[1] = diff - 1;
+    0.00 :   ffffffff815e2d65:       jmp    ffffffff815e294b <copy_present_ptes+0x1db>
+         : 683              asm_inline volatile(LOCK_PREFIX "andb %b1,%0"
+    0.00 :   ffffffff815e2d6a:       lock andb $0xf7,0x1(%r13)
+         : 685              static __always_inline void ClearPageAnonExclusive(struct page *page)
+         : 686              {
+         : 687              VM_BUG_ON_PGFLAGS(!PageAnonNotKsm(page), page);
+         : 688              VM_BUG_ON_PGFLAGS(PageHuge(page) && !PageHead(page), page);
+         : 689              clear_bit(PG_anon_exclusive, &PF_ANY(page, 1)->flags);
+         : 690              }
+    0.00 :   ffffffff815e2d70:       jmp    ffffffff815e2af7 <copy_present_ptes+0x387>
+         : 692              return page;
+    0.00 :   ffffffff815e2d75:       mov    %r13,%rax
+         : 694              if (IS_ALIGNED((unsigned long)page, PAGE_SIZE) &&
+    0.00 :   ffffffff815e2d78:       test   $0xfff,%r13d
+    0.00 :   ffffffff815e2d7f:       jne    ffffffff815e29b9 <copy_present_ptes+0x249>
+         : 697              (addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
+    0.00 :   ffffffff815e2d85:       mov    0x0(%r13),%rdx
+    0.00 :   ffffffff815e2d89:       and    $0x40,%edx
+    0.00 :   ffffffff815e2d8c:       je     ffffffff815e29b9 <copy_present_ptes+0x249>
+         : 701              unsigned long head = READ_ONCE(page[1].compound_head);
+    0.00 :   ffffffff815e2d92:       mov    0x48(%r13),%rdx
+         : 703              return (const struct page *)(head - 1);
+    0.00 :   ffffffff815e2d96:       lea    -0x1(%rdx),%rax
+    0.00 :   ffffffff815e2d9a:       and    $0x1,%edx
+    0.00 :   ffffffff815e2d9d:       cmove  %r13,%rax
+    0.00 :   ffffffff815e2da1:       jmp    ffffffff815e29b9 <copy_present_ptes+0x249>
+         : 708              folio->_mm_id[idx] &= ~MM_ID_MASK;
+    0.00 :   ffffffff815e2da6:       and    $0x80000000,%eax
+         : 710              folio->_mm_id_mapcount[0] = diff - 1;
+    0.00 :   ffffffff815e2dab:       movl   $0x0,0x60(%rbx)
+         : 712              folio->_mm_id[idx] |= id;
+    0.00 :   ffffffff815e2db2:       or     %edx,%eax
+    0.00 :   ffffffff815e2db4:       mov    %eax,0x68(%rbx)
+         : 715              if (new_mapcount_val != diff - 1)
+    0.00 :   ffffffff815e2db7:       cmp    $0xffffffff,%edi
+    0.00 :   ffffffff815e2dba:       jne    ffffffff815e2a4b <copy_present_ptes+0x2db>
+    0.00 :   ffffffff815e2dc0:       jmp    ffffffff815e2c0f <copy_present_ptes+0x49f>
+         : 719              raw_cpu_add_4(__preempt_count, val);
+    0.00 :   ffffffff815e2dc5:       incl   %gs:0x1e36264(%rip)        # ffffffff83419030 <__preempt_count>
+         : 721              return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(bts), *addr, c, "Ir", nr);
+    0.00 :   ffffffff815e2dcc:       lock btsq $0x1f,(%rsi)
+         : 723              while (unlikely(test_and_set_bit_lock(bitnum, addr))) {
+    0.00 :   ffffffff815e2dd2:       jae    ffffffff815e28f6 <copy_present_ptes+0x186>
+         : 725              return GEN_UNARY_RMWcc("decl", __my_cpu_var(__preempt_count), e,
+    0.00 :   ffffffff815e2dd8:       decl   %gs:0x1e36251(%rip)        # ffffffff83419030 <__preempt_count>
+         : 727              preempt_enable();
+    0.00 :   ffffffff815e2ddf:       je     ffffffff815e2ea0 <copy_present_ptes+0x730>
+         : 729              #ifndef __ASSEMBLER__
+         :
+         : 731              /* REP NOP (PAUSE) is a good thing to insert into busy-wait loops. */
+         : 732              static __always_inline void rep_nop(void)
+         : 733              {
+         : 734              asm volatile("rep; nop" ::: "memory");
+    0.00 :   ffffffff815e2de5:       pause
+         : 736              (addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
+    0.00 :   ffffffff815e2de7:       mov    0x68(%rbx),%rax
+         : 738              } while (test_bit(bitnum, addr));
+    0.00 :   ffffffff815e2deb:       test   $0x80000000,%eax
+    0.00 :   ffffffff815e2df0:       jne    ffffffff815e2de5 <copy_present_ptes+0x675>
+    0.00 :   ffffffff815e2df2:       jmp    ffffffff815e2dc5 <copy_present_ptes+0x655>
+         : 742              raw_cpu_add_4(__preempt_count, val);
+    0.00 :   ffffffff815e2df4:       incl   %gs:0x1e36235(%rip)        # ffffffff83419030 <__preempt_count>
+         : 744              return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(bts), *addr, c, "Ir", nr);
+    0.00 :   ffffffff815e2dfb:       lock btsq $0x1f,(%rsi)
+         : 746              while (unlikely(test_and_set_bit_lock(bitnum, addr))) {
+    0.00 :   ffffffff815e2e01:       jae    ffffffff815e29f2 <copy_present_ptes+0x282>
+         : 748              return GEN_UNARY_RMWcc("decl", __my_cpu_var(__preempt_count), e,
+    0.00 :   ffffffff815e2e07:       decl   %gs:0x1e36222(%rip)        # ffffffff83419030 <__preempt_count>
+         : 750              preempt_enable();
+    0.00 :   ffffffff815e2e0e:       je     ffffffff815e2eaa <copy_present_ptes+0x73a>
+    0.00 :   ffffffff815e2e14:       pause
+         : 753              (addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
+    0.00 :   ffffffff815e2e16:       mov    0x68(%rbx),%rax
+         : 755              } while (test_bit(bitnum, addr));
+    0.00 :   ffffffff815e2e1a:       test   $0x80000000,%eax
+    0.00 :   ffffffff815e2e1f:       jne    ffffffff815e2e14 <copy_present_ptes+0x6a4>
+    0.00 :   ffffffff815e2e21:       jmp    ffffffff815e2df4 <copy_present_ptes+0x684>
+         : 759              folio->_mm_id_mapcount[1] += diff;
+    0.00 :   ffffffff815e2e23:       addl   $0x1,0x64(%rbx)
+         : 761              if (!IS_ENABLED(CONFIG_64BIT) && unlikely(folio->_mm_id_mapcount[1] < 0)) {
+    0.00 :   ffffffff815e2e27:       jmp    ffffffff815e2c0f <copy_present_ptes+0x49f>
+         : 763              return page;
+    0.00 :   ffffffff815e2e2c:       mov    %r13,%rax
+         : 765              if (IS_ALIGNED((unsigned long)page, PAGE_SIZE) &&
+    0.00 :   ffffffff815e2e2f:       test   $0xfff,%r13d
+    0.00 :   ffffffff815e2e36:       jne    ffffffff815e2aeb <copy_present_ptes+0x37b>
+    0.00 :   ffffffff815e2e3c:       mov    0x0(%r13),%rdx
+    0.00 :   ffffffff815e2e40:       and    $0x40,%edx
+    0.00 :   ffffffff815e2e43:       je     ffffffff815e2aeb <copy_present_ptes+0x37b>
+         : 771              unsigned long head = READ_ONCE(page[1].compound_head);
+    0.00 :   ffffffff815e2e49:       mov    0x48(%r13),%rdx
+         : 773              return (const struct page *)(head - 1);
+    0.00 :   ffffffff815e2e4d:       lea    -0x1(%rdx),%rax
+    0.00 :   ffffffff815e2e51:       and    $0x1,%edx
+    0.00 :   ffffffff815e2e54:       cmove  %r13,%rax
+    0.00 :   ffffffff815e2e58:       jmp    ffffffff815e2aeb <copy_present_ptes+0x37b>
+         : 778              return head - 1;
+    0.00 :   ffffffff815e2e5d:       sub    $0x1,%rax
+    0.00 :   ffffffff815e2e61:       jmp    ffffffff815e29b9 <copy_present_ptes+0x249>
+         : 781              return page;
+    0.00 :   ffffffff815e2e66:       mov    %r13,%rax
+         : 783              if (IS_ALIGNED((unsigned long)page, PAGE_SIZE) &&
+    0.00 :   ffffffff815e2e69:       test   $0xfff,%r13d
+    0.00 :   ffffffff815e2e70:       jne    ffffffff815e2c66 <copy_present_ptes+0x4f6>
+    0.00 :   ffffffff815e2e76:       mov    0x0(%r13),%rcx
+    0.00 :   ffffffff815e2e7a:       and    $0x40,%ecx
+    0.00 :   ffffffff815e2e7d:       je     ffffffff815e2c66 <copy_present_ptes+0x4f6>
+         : 789              unsigned long head = READ_ONCE(page[1].compound_head);
+    0.00 :   ffffffff815e2e83:       mov    0x48(%r13),%rcx
+         : 791              return (const struct page *)(head - 1);
+    0.00 :   ffffffff815e2e87:       lea    -0x1(%rcx),%rax
+    0.00 :   ffffffff815e2e8b:       and    $0x1,%ecx
+    0.00 :   ffffffff815e2e8e:       cmove  %r13,%rax
+    0.00 :   ffffffff815e2e92:       jmp    ffffffff815e2c66 <copy_present_ptes+0x4f6>
+         : 796              return head - 1;
+    0.00 :   ffffffff815e2e97:       sub    $0x1,%rax
+    0.00 :   ffffffff815e2e9b:       jmp    ffffffff815e2aeb <copy_present_ptes+0x37b>
+         : 799              preempt_enable();
+    0.00 :   ffffffff815e2ea0:       call   ffffffff81fa9988 <__SCT__preempt_schedule>
+    0.00 :   ffffffff815e2ea5:       jmp    ffffffff815e2de5 <copy_present_ptes+0x675>
+    0.00 :   ffffffff815e2eaa:       call   ffffffff81fa9988 <__SCT__preempt_schedule>
+    0.00 :   ffffffff815e2eaf:       jmp    ffffffff815e2e14 <copy_present_ptes+0x6a4>
+    0.00 :   ffffffff815e2eb4:       sub    $0x1,%rax
+    0.00 :   ffffffff815e2eb8:       jmp    ffffffff815e2c66 <copy_present_ptes+0x4f6>
+         : 806              __folio_put(folio);
+    0.00 :   ffffffff815e2ebd:       mov    %rbx,%rdi
+    0.00 :   ffffffff815e2ec0:       mov    %r11,-0x50(%rbp)
+    0.00 :   ffffffff815e2ec4:       call   ffffffff815a2df0 <__folio_put>
+    0.00 :   ffffffff815e2ec9:       mov    -0x50(%rbp),%r11
+    0.00 :   ffffffff815e2ecd:       jmp    ffffffff815e2c7b <copy_present_ptes+0x50b>
+         : 812              }
+    0.00 :   ffffffff815e2ed2:       call   ffffffff81f98c90 <__stack_chk_fail>
+    0.00 :   ffffffff815e2ed7:       mov    (%rbx),%rax
+         : 815              if (!folio_test_large(folio)) {
+    0.00 :   ffffffff815e2eda:       test   $0x40,%al
+    0.00 :   ffffffff815e2edc:       jne    ffffffff815e2f47 <copy_present_ptes+0x7d7>
+         : 818              asm_inline volatile(LOCK_PREFIX "incl %0"
+    0.00 :   ffffffff815e2ede:       lock incl 0x30(%rbx)
+    0.00 :   ffffffff815e2ee2:       mov    (%rbx),%rax
+         : 821              }
+         :
+         : 823              /* Optimized variant when folio is already known not to be anon */
+         : 824              static inline int mm_counter_file(struct folio *folio)
+         : 825              {
+         : 826              if (folio_test_swapbacked(folio))
+    0.00 :   ffffffff815e2ee5:       test   $0x20000,%eax
+    0.00 :   ffffffff815e2eea:       jne    ffffffff815e3010 <copy_present_ptes+0x8a0>
+         : 829              return MM_SHMEMPAGES;
+         : 830              return MM_FILEPAGES;
+    0.00 :   ffffffff815e2ef0:       xor    %eax,%eax
+         : 832              rss[mm_counter_file(folio)] += nr;
+    0.00 :   ffffffff815e2ef2:       add    %r15d,(%r11,%rax,4)
+    0.00 :   ffffffff815e2ef6:       jmp    ffffffff815e2b9e <copy_present_ptes+0x42e>
+         : 835              pte = pte_mkwrite(pte, src_vma);
+    0.00 :   ffffffff815e2efb:       mov    -0x58(%rbp),%rdi
+    0.00 :   ffffffff815e2eff:       mov    %r14,%rsi
+    0.33 :   ffffffff815e2f02:       call   ffffffff81308bb0 <pte_mkwrite>
+    0.00 :   ffffffff815e2f07:       mov    %rax,%r12
+    0.00 :   ffffffff815e2f0a:       jmp    ffffffff815e2ba8 <copy_present_ptes+0x438>
+         : 841              dup_err = folio_try_dup_anon_exclusive_rmap_ptes(
+    0.00 :   ffffffff815e2f0f:       mov    -0x40(%rbp),%rcx
+    0.00 :   ffffffff815e2f13:       mov    %r15d,%edx
+    0.00 :   ffffffff815e2f16:       mov    %r13,%rsi
+    1.49 :   ffffffff815e2f19:       mov    %rbx,%rdi // memory.c:1016
+    0.00 :   ffffffff815e2f1c:       mov    %r11,-0x68(%rbp)
+    1.82 :   ffffffff815e2f20:       call   ffffffff815e0280 <folio_try_dup_anon_exclusive_rmap_ptes.isra.0>
+    0.00 :   ffffffff815e2f25:       mov    -0x68(%rbp),%r11
+    1.66 :   ffffffff815e2f29:       jmp    ffffffff815e2b92 <copy_present_ptes+0x422>
+         : 850              if (is_cow_mapping(src_vma->vm_flags) && pte_write(pte)) {
+    0.00 :   ffffffff815e2f2e:       mov    %r12,%rdi
+    0.83 :   ffffffff815e2f31:       call   ffffffff815dd2f0 <pte_write> // memory.c:957
+    0.00 :   ffffffff815e2f36:       test   %eax,%eax
+    0.33 :   ffffffff815e2f38:       jne    ffffffff815e301a <copy_present_ptes+0x8aa>
+         : 855              return native_make_pte(v);
+    0.00 :   ffffffff815e2f3e:       mov    0x20(%r14),%rax
+    1.99 :   ffffffff815e2f42:       jmp    ffffffff815e2bbc <copy_present_ptes+0x44c> // pgtable.h:429
+    0.00 :   ffffffff815e2f47:       add    $0x30,%r13
+    0.00 :   ffffffff815e2f4b:       mov    %r15d,%eax
+    0.00 :   ffffffff815e2f4e:       lock incl 0x0(%r13)
+         : 861              } while (page++, --nr_pages > 0);
+    0.00 :   ffffffff815e2f53:       sub    $0x1,%eax
+    0.00 :   ffffffff815e2f56:       add    $0x40,%r13
+    0.00 :   ffffffff815e2f5a:       test   %eax,%eax
+    0.00 :   ffffffff815e2f5c:       jg     ffffffff815e2f4e <copy_present_ptes+0x7de>
+         : 866              const mm_id_t mm_id = vma->vm_mm->mm_id;
+    0.00 :   ffffffff815e2f5e:       mov    -0x40(%rbp),%rax
+         : 868              bit_spin_lock(FOLIO_MM_IDS_LOCK_BITNUM, &folio->_mm_ids);
+    0.00 :   ffffffff815e2f62:       lea    0x68(%rbx),%rdx
+         : 870              const mm_id_t mm_id = vma->vm_mm->mm_id;
+    0.00 :   ffffffff815e2f66:       mov    0x10(%rax),%rax
+    0.00 :   ffffffff815e2f6a:       mov    0x528(%rax),%ecx
+         : 873              raw_cpu_add_4(__preempt_count, val);
+    0.00 :   ffffffff815e2f70:       incl   %gs:0x1e360b9(%rip)        # ffffffff83419030 <__preempt_count>
+         : 875              return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(bts), *addr, c, "Ir", nr);
+    0.00 :   ffffffff815e2f77:       lock btsq $0x1f,(%rdx)
+         : 877              while (unlikely(test_and_set_bit_lock(bitnum, addr))) {
+    0.00 :   ffffffff815e2f7d:       jb     ffffffff815e3067 <copy_present_ptes+0x8f7>
+         : 879              return folio->_mm_id[idx] & MM_ID_MASK;
+    0.00 :   ffffffff815e2f83:       mov    0x68(%rbx),%r9d
+         : 881              return __READ_ONCE((v)->counter);
+    0.00 :   ffffffff815e2f87:       mov    0x50(%rbx),%edi
+    0.00 :   ffffffff815e2f8a:       mov    %r9d,%r8d
+         : 884              new_mapcount_val = atomic_read(&folio->_large_mapcount) + diff;
+    0.00 :   ffffffff815e2f8d:       lea    (%r15,%rdi,1),%eax
+         : 886              return folio->_mm_id[idx] & MM_ID_MASK;
+    0.00 :   ffffffff815e2f91:       and    $0x7fffffff,%r8d
+         : 888              __WRITE_ONCE(v->counter, i);
+    0.00 :   ffffffff815e2f98:       mov    %eax,0x50(%rbx)
+         : 890              if (folio_mm_id(folio, 0) == mm_id) {
+    0.00 :   ffffffff815e2f9b:       cmp    %r8d,%ecx
+    0.00 :   ffffffff815e2f9e:       je     ffffffff815e2ff7 <copy_present_ptes+0x887>
+         : 893              return folio->_mm_id[idx] & MM_ID_MASK;
+    0.00 :   ffffffff815e2fa0:       mov    0x6c(%rbx),%eax
+    0.00 :   ffffffff815e2fa3:       mov    %eax,%esi
+    0.00 :   ffffffff815e2fa5:       and    $0x7fffffff,%esi
+         : 897              } else if (folio_mm_id(folio, 1) == mm_id) {
+    0.00 :   ffffffff815e2fab:       cmp    %esi,%ecx
+    0.00 :   ffffffff815e2fad:       je     ffffffff815e30b9 <copy_present_ptes+0x949>
+         : 900              } else if (folio_mm_id(folio, 0) == MM_ID_DUMMY) {
+    0.00 :   ffffffff815e2fb3:       test   %r8d,%r8d
+    0.00 :   ffffffff815e2fb6:       jne    ffffffff815e309b <copy_present_ptes+0x92b>
+         : 903              folio->_mm_id[idx] &= ~MM_ID_MASK;
+    0.00 :   ffffffff815e2fbc:       mov    %r9d,%eax
+    0.00 :   ffffffff815e2fbf:       and    $0x80000000,%eax
+         : 906              folio->_mm_id[idx] |= id;
+    0.00 :   ffffffff815e2fc4:       or     %ecx,%eax
+         : 908              if (new_mapcount_val != diff - 1)
+    0.00 :   ffffffff815e2fc6:       add    $0x1,%edi
+         : 910              folio->_mm_id[idx] |= id;
+    0.00 :   ffffffff815e2fc9:       mov    %eax,0x68(%rbx)
+         : 912              folio->_mm_id_mapcount[0] = diff - 1;
+    0.00 :   ffffffff815e2fcc:       lea    -0x1(%r15),%eax
+    0.00 :   ffffffff815e2fd0:       mov    %eax,0x60(%rbx)
+         : 915              if (new_mapcount_val != diff - 1)
+    0.00 :   ffffffff815e2fd3:       je     ffffffff815e2fdb <copy_present_ptes+0x86b>
+         : 917              folio->_mm_ids |= FOLIO_MM_IDS_SHARED_BIT;
+    0.00 :   ffffffff815e2fd5:       btsq   $0x3f,0x68(%rbx)
+         : 919              asm volatile(__ASM_SIZE(btr) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
+    0.00 :   ffffffff815e2fdb:       btrq   $0x1f,(%rdx)
+         : 921              return GEN_UNARY_RMWcc("decl", __my_cpu_var(__preempt_count), e,
+    0.00 :   ffffffff815e2fe0:       decl   %gs:0x1e36049(%rip)        # ffffffff83419030 <__preempt_count>
+         : 923              preempt_enable();
+    0.00 :   ffffffff815e2fe7:       jne    ffffffff815e2ee2 <copy_present_ptes+0x772>
+    0.00 :   ffffffff815e2fed:       call   ffffffff81fa9988 <__SCT__preempt_schedule>
+    0.00 :   ffffffff815e2ff2:       jmp    ffffffff815e2ee2 <copy_present_ptes+0x772>
+         : 927              folio->_mm_id_mapcount[0] += diff;
+    0.00 :   ffffffff815e2ff7:       add    %r15d,0x60(%rbx)
+         : 929              if (!IS_ENABLED(CONFIG_64BIT) && unlikely(folio->_mm_id_mapcount[0] < 0)) {
+    0.00 :   ffffffff815e2ffb:       jmp    ffffffff815e2fdb <copy_present_ptes+0x86b>
+         : 931              asm_inline volatile(LOCK_PREFIX "subl %1, %0"
+    0.00 :   ffffffff815e2ffd:       mov    -0x50(%rbp),%rax
+    0.00 :   ffffffff815e3001:       lock sub %r15d,(%rax)
+         : 934              return -EAGAIN;
+    0.00 :   ffffffff815e3005:       mov    $0xfffffff5,%r15d
+    0.00 :   ffffffff815e300b:       jmp    ffffffff815e2868 <copy_present_ptes+0xf8>
+         : 937              return MM_SHMEMPAGES;
+    0.00 :   ffffffff815e3010:       mov    $0x3,%eax
+    0.00 :   ffffffff815e3015:       jmp    ffffffff815e2ef2 <copy_present_ptes+0x782>
+         : 940              v |= ((v >> _PAGE_BIT_DIRTY) & cond) << _PAGE_BIT_SAVED_DIRTY;
+    0.00 :   ffffffff815e301a:       mov    $0x1,%edi
+    0.00 :   ffffffff815e301f:       mov    -0x60(%rbp),%rdx
+    0.00 :   ffffffff815e3023:       mov    %r15d,%ecx
+    0.17 :   ffffffff815e3026:       shl    $0x3a,%rdi
+    0.33 :   ffffffff815e302a:       jmp    ffffffff815e3030 <copy_present_ptes+0x8c0>
+         : 946              {
+         : 947              for (;;) {
+         : 948              ptep_set_wrprotect(mm, addr, ptep);
+         : 949              if (--nr == 0)
+         : 950              break;
+         : 951              ptep++;
+    0.00 :   ffffffff815e302c:       add    $0x8,%rdx
+         : 953              old_pte = READ_ONCE(*ptep);
+    0.00 :   ffffffff815e3030:       mov    (%rdx),%rax
+         : 955              v |= ((v >> _PAGE_BIT_DIRTY) & cond) << _PAGE_BIT_SAVED_DIRTY;
+    0.00 :   ffffffff815e3033:       mov    %rax,%r8
+    0.66 :   ffffffff815e3036:       mov    %rax,%rsi // pgtable.h:408
+    0.00 :   ffffffff815e3039:       shl    $0x34,%r8
+    0.00 :   ffffffff815e303d:       and    $0xffffffffffffffbd,%rsi
+    0.00 :   ffffffff815e3041:       and    %rdi,%r8
+         : 961              v &= ~(cond << _PAGE_BIT_DIRTY);
+    0.17 :   ffffffff815e3044:       or     %r8,%rsi
+         : 963              } while (!try_cmpxchg((long *)&ptep->pte, (long *)&old_pte, *(long *)&new_pte));
+    7.78 :   ffffffff815e3047:       lock cmpxchg %rsi,(%rdx) // pgtable.h:1345
+    1.32 :   ffffffff815e304c:       jne    ffffffff815e3033 <copy_present_ptes+0x8c3>
+         : 966              if (--nr == 0)
+    0.00 :   ffffffff815e304e:       sub    $0x1,%ecx
+    0.99 :   ffffffff815e3051:       jne    ffffffff815e302c <copy_present_ptes+0x8bc> // pgtable.h:886
+         : 969              return native_make_pte(v & ~clear);
+    0.00 :   ffffffff815e3053:       mov    %r12,%rdi
+    0.00 :   ffffffff815e3056:       and    $0xfffffffffffffffd,%rdi
+         : 972              v = mksaveddirty_shift(v);
+    0.66 :   ffffffff815e305a:       call   ffffffff815dd370 <mksaveddirty_shift> // pgtable.h:428
+    0.00 :   ffffffff815e305f:       mov    %rax,%r12
+    0.33 :   ffffffff815e3062:       jmp    ffffffff815e2f3e <copy_present_ptes+0x7ce>
+    0.00 :   ffffffff815e3067:       decl   %gs:0x1e35fc2(%rip)        # ffffffff83419030 <__preempt_count>
+         : 977              preempt_enable();
+    0.00 :   ffffffff815e306e:       je     ffffffff815e3094 <copy_present_ptes+0x924>
+    0.00 :   ffffffff815e3070:       pause
+         : 980              (addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
+    0.00 :   ffffffff815e3072:       mov    0x68(%rbx),%rax
+         : 982              } while (test_bit(bitnum, addr));
+    0.00 :   ffffffff815e3076:       test   $0x80000000,%eax
+    0.00 :   ffffffff815e307b:       jne    ffffffff815e3070 <copy_present_ptes+0x900>
+         : 985              raw_cpu_add_4(__preempt_count, val);
+    0.00 :   ffffffff815e307d:       incl   %gs:0x1e35fac(%rip)        # ffffffff83419030 <__preempt_count>
+         : 987              preempt_disable();
+    0.00 :   ffffffff815e3084:       jmp    ffffffff815e2f77 <copy_present_ptes+0x807>
+         : 989              return err ? err : 1;
+    0.00 :   ffffffff815e3089:       mov    $0xffffff7b,%r15d
+    0.00 :   ffffffff815e308f:       jmp    ffffffff815e2868 <copy_present_ptes+0xf8>
+         : 992              preempt_enable();
+    0.00 :   ffffffff815e3094:       call   ffffffff81fa9988 <__SCT__preempt_schedule>
+    0.00 :   ffffffff815e3099:       jmp    ffffffff815e3070 <copy_present_ptes+0x900>
+         : 995              } else if (folio_mm_id(folio, 1) == MM_ID_DUMMY) {
+    0.00 :   ffffffff815e309b:       test   %esi,%esi
+    0.00 :   ffffffff815e309d:       jne    ffffffff815e2fdb <copy_present_ptes+0x86b>
+         : 998              folio->_mm_id[idx] &= ~MM_ID_MASK;
+    0.00 :   ffffffff815e30a3:       and    $0x80000000,%eax
+         : 1000             folio->_mm_id[idx] |= id;
+    0.00 :   ffffffff815e30a8:       or     %ecx,%eax
+    0.00 :   ffffffff815e30aa:       mov    %eax,0x6c(%rbx)
+         : 1003             folio->_mm_id_mapcount[1] = diff - 1;
+    0.00 :   ffffffff815e30ad:       lea    -0x1(%r15),%eax
+    0.00 :   ffffffff815e30b1:       mov    %eax,0x64(%rbx)
+    0.00 :   ffffffff815e30b4:       jmp    ffffffff815e2fd5 <copy_present_ptes+0x865>
+         : 1007             folio->_mm_id_mapcount[1] += diff;
+    0.00 :   ffffffff815e30b9:       add    %r15d,0x64(%rbx)
+         : 1009             if (!IS_ENABLED(CONFIG_64BIT) && unlikely(folio->_mm_id_mapcount[1] < 0)) {
+    0.00 :   ffffffff815e30bd:       jmp    ffffffff815e2fdb <copy_present_ptes+0x86b>
